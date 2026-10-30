@@ -6,21 +6,26 @@
 @item-height: 3rem;
 
 .dropdown {
-    background: var(--modal-background-color);
+    background: #18192b;
     display: none;
     position: absolute;
-    width: 100%;
-    top: 100%;
+    min-width: 100%;
+    width: max-content;
+    min-width: 9rem;
+    max-width: 18rem;
+    top: calc(100% + 0.35rem);
     left: 0;
-    z-index: 10;
-    box-shadow: var(--outer-glow);
-    border-radius: var(--border-radius);
+    z-index: 1000;
+    border: 1px solid rgba(115, 92, 230, 0.45);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
+    border-radius: 0.75rem;
+    padding: 0.35rem 0;
     --spatial-navigation-contain: contain;
 
     &.open {
         display: block;
-        max-height: calc(@item-height * 7);
-        overflow: auto;
+        max-height: calc(@item-height * 6.5);
+        overflow-y: auto;
     }
 
     .back-button {

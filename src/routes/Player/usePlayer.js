@@ -4,38 +4,59 @@ const React = require('react');
 const { useCore } = require('stremio/core');
 const { useModelState, useCoreSuspender } = require('stremio/common');
 
-const map = (player) => ({
-    ...player,
-    metaItem: player.metaItem !== null && player.metaItem.type === 'Ready' ?
-        {
-            ...player.metaItem,
-            content: {
-                ...player.metaItem.content,
-                released: new Date(
-                    typeof player.metaItem.content.released === 'string' ?
-                        player.metaItem.content.released
-                        :
-                        NaN
-                ),
-                videos: player.metaItem.content.videos.map((video) => ({
-                    ...video,
+const map = (player) => {
+    if (!player) return {};
+    return {
+        ...player,
+        metaItem: player?.metaItem?.type === 'Ready' && player.metaItem.content ?
+            {
+                ...player.metaItem,
+                content: {
+                    ...player.metaItem.content,
                     released: new Date(
-                        typeof video.released === 'string' ?
-                            video.released
+                        typeof player.metaItem.content.released === 'string' ?
+                            player.metaItem.content.released
                             :
                             NaN
                     ),
-                }))
+                    videos: Array.isArray(player.metaItem.content.videos) ? player.metaItem.content.videos.map((video) => ({
+                        ...video,
+                        released: new Date(
+                            typeof video?.released === 'string' ?
+                                video.released
+                                :
+                                NaN
+                        ),
+                    })) : []
+                }
             }
-        }
-        :
-        player.metaItem,
-});
+            :
+            player?.metaItem ?? null,
+    };
+};
 
 const usePlayer = (urlParams) => {
     const core = useCore();
-    const { decodeStream } = useCoreSuspender();
-    const stream = decodeStream(urlParams.stream);
+    const rawStream = urlParams.stream;
+    const normalizedStream = typeof rawStream === 'string' && rawStream.includes('%') ? decodeURIComponent(rawStream) : rawStream;
+    const [stream, setStream] = React.useState(null);
+
+    React.useEffect(() => {
+        let active = true;
+        if (typeof normalizedStream === 'string' && normalizedStream.length > 0) {
+            core.transport.decodeStream(normalizedStream).then((res) => {
+                if (active) {
+                    
+                    setStream(res);
+                }
+            }).catch((err) => {
+                
+                if (active) setStream(null);
+            });
+        }
+        return () => { active = false; };
+    }, [normalizedStream, core]);
+
     const action = React.useMemo(() => {
         if (stream !== null) {
             return {
@@ -85,7 +106,7 @@ const usePlayer = (urlParams) => {
                 action: 'Unload'
             };
         }
-    }, [urlParams]);
+    }, [stream, urlParams]);
 
     const player = useModelState({ model: 'player', action, map });
 

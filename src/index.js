@@ -1,3 +1,35 @@
+
+window.addEventListener('error', (event) => {
+    fetch('http://127.0.0.1:8080/api/log', {
+        method: 'POST',
+        body: JSON.stringify({
+            type: 'UNHANDLED_ERROR',
+            message: event.message,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            error: event.error ? event.error.stack : null
+        })
+    }).catch(() => {});
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    fetch('http://127.0.0.1:8080/api/log', {
+        method: 'POST',
+        body: JSON.stringify({
+            type: 'UNHANDLED_REJECTION',
+            reason: event.reason ? (event.reason.stack || event.reason.message || String(event.reason)) : null
+        })
+    }).catch(() => {});
+});
+
+window.debugLog = (tag, data) => {
+    fetch('http://127.0.0.1:8080/api/log', {
+        method: 'POST',
+        body: JSON.stringify({ tag, data, time: Date.now() })
+    }).catch(() => {});
+};
+
 // Copyright (C) 2017-2023 Smart code 203358507
 
 if (typeof process.env.SENTRY_DSN === 'string') {
@@ -43,6 +75,7 @@ const appInfo = {
 };
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
+window.debugLog && window.debugLog('APP_LOADED_LOG', { href: window.location.href, hash: window.location.hash });
 root.render(
     <React.StrictMode>
         <PlatformProvider>

@@ -41,6 +41,36 @@ const App = () => {
     const [shortcutModalOpen,, closeShortcutsModal, toggleShortcutModal] = useBinaryState(false);
     const [gamepadModalOpen,, closeGamepadModal, toggleGamepadModal] = useBinaryState(false);
 
+    // Auto-connect to local Stremio Streaming Engine on 127.0.0.1:11470
+    React.useEffect(() => {
+        const LOCAL_STREAMING_URL = 'http://127.0.0.1:11470/';
+        if (profile.settings && profile.settings.streamingServerUrl !== LOCAL_STREAMING_URL) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'AddServerUrl',
+                    args: LOCAL_STREAMING_URL,
+                },
+            });
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        streamingServerUrl: LOCAL_STREAMING_URL,
+                    },
+                },
+            });
+            core.transport.dispatch({
+                action: 'StreamingServer',
+                args: {
+                    action: 'Reload',
+                },
+            });
+        }
+    }, [core, profile.settings]);
+
     const onShortcut = React.useCallback((name, combo, key) => {
         switch (name) {
             case 'interfaceScale':

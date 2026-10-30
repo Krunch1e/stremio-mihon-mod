@@ -71,19 +71,8 @@ const Routes = () => {
     }, [location.pathname, profile.auth]);
 
     React.useLayoutEffect(() => {
-        const updateViews = () => setViews((currentViews) => getNextViews(currentViews, location));
-
-        if (
-            navigationType === 'PUSH' &&
-            supportsViewTransitions &&
-            typeof document.startViewTransition === 'function' &&
-            !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) {
-            document.startViewTransition(() => flushSync(updateViews));
-        } else {
-            updateViews();
-        }
-    }, [location, navigationType]);
+        setViews((currentViews) => getNextViews(currentViews, location));
+    }, [location]);
 
     const visibleViews = views.filter((view): view is CachedView => view !== null);
 

@@ -52,7 +52,7 @@ const MetaDetails = () => {
     }, [metaDetails.selected]);
     const video = React.useMemo(() => {
         return streamPath !== null && metaDetails.metaItem !== null && metaDetails.metaItem.content.type === 'Ready' ?
-            metaDetails.metaItem.content.content.videos.reduce((result, video) => {
+            (Array.isArray(metaDetails.metaItem.content.content.videos) ? metaDetails.metaItem.content.content.videos : []).reduce((result, video) => {
                 if (video.id === streamPath.id) {
                     return video;
                 }
@@ -287,7 +287,13 @@ const MetaDetailsFallback = () => {
                 fullscreenButton={true}
                 navMenu={true}
             />
-            {type === 'tv' && <LiveTvPlaceholder />}
+            {type === 'tv' ? (
+                <LiveTvPlaceholder />
+            ) : (
+                <div className={styles['metadetails-content']}>
+                    <MetaPreview.Placeholder className={styles['meta-preview']} />
+                </div>
+            )}
         </div>
     );
 };

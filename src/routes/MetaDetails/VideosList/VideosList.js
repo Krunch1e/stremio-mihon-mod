@@ -18,7 +18,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
         return metaItem?.content?.content?.inLibrary && metaItem?.content?.content?.videos?.length;
     }, [metaItem]);
     const videos = React.useMemo(() => {
-        return metaItem && metaItem.content.type === 'Ready' ?
+        return metaItem && metaItem.content.type === 'Ready' && Array.isArray(metaItem.content.content?.videos) ?
             metaItem.content.content.videos
             :
             [];

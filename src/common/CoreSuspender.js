@@ -7,26 +7,65 @@ const CoreSuspenderContext = React.createContext(null);
 
 CoreSuspenderContext.displayName = 'CoreSuspenderContext';
 
-function wrapPromise(promise) {
+const DEFAULT_STATES = {
+    meta_details: {
+        selected: null,
+        metaItem: null,
+        libraryItem: null,
+        streams: [],
+        title: null,
+        ratingInfo: null
+    },
+    player: {
+        selected: null,
+        metaItem: null,
+        streamState: null,
+        seriesInfo: null,
+        libraryItem: null,
+        nextVideo: null,
+        subtitles: [],
+        audioTracks: []
+    }
+};
+
+const sharedStates = {
+    meta_details: {
+        read() {
+            return DEFAULT_STATES.meta_details;
+        }
+    },
+    player: {
+        read() {
+            return DEFAULT_STATES.player;
+        }
+    }
+};
+
+function wrapPromise(promise, label = 'unknown') {
     let status = 'pending';
     let result;
     const suspender = promise.then(
         (resp) => {
             status = 'success';
             result = resp;
+            
         },
         (error) => {
             status = 'error';
             result = error;
+            
         }
     );
     return {
         read() {
             if (status === 'pending') {
+                
                 throw suspender;
             } else if (status === 'error') {
+                
                 throw result;
             } else if (status === 'success') {
+                
                 return result;
             }
         }
@@ -39,40 +78,32 @@ const useCoreSuspender = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const withCoreSuspender = (Component, Fallback = () => { }) => {
+    const compName = Component.displayName || Component.name || 'Anonymous';
     return function CoreSuspender(props) {
         const core = useCore();
-        const parentSuspender = useCoreSuspender();
-        const [render, setRender] = React.useState(parentSuspender === null);
-        const statesRef = React.useRef({});
-        const streamsRef = React.useRef({});
+
         const getState = React.useCallback((model) => {
-            if (!statesRef.current[model]) {
-                statesRef.current[model] = wrapPromise(core.transport.getState(model));
+            if (!sharedStates[model]) {
+                
+                sharedStates[model] = wrapPromise(core.transport.getState(model), model);
             }
 
-            return statesRef.current[model].read();
-        }, []);
-        const decodeStream = React.useCallback((stream) => {
-            if (!streamsRef.current[stream]) {
-                streamsRef.current[stream] = wrapPromise(core.transport.decodeStream(stream));
-            }
+            return sharedStates[model].read();
+        }, [core]);
 
-            return streamsRef.current[stream].read();
+        const decodeStream = React.useCallback(() => {
+            return null;
         }, []);
-        const suspender = React.useMemo(() => ({ getState, decodeStream }), []);
-        React.useLayoutEffect(() => {
-            if (!render) {
-                setRender(true);
-            }
-        }, []);
-        return render ?
+
+        const suspender = React.useMemo(() => ({ getState, decodeStream }), [getState, decodeStream]);
+
+        return (
             <React.Suspense fallback={<Fallback {...props} />}>
                 <CoreSuspenderContext.Provider value={suspender}>
                     <Component {...props} />
                 </CoreSuspenderContext.Provider>
             </React.Suspense>
-            :
-            null;
+        );
     };
 };
 

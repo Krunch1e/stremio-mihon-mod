@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-@height: 3rem;
+@height: 2.6rem;
 
 .option {
     height: @height;
@@ -9,11 +9,16 @@
     align-items: center;
     display: flex;
     flex-direction: row;
-    padding: 1rem;
+    padding: 0 1.15rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
 
     .label {
         flex: 1;
         color: var(--primary-foreground-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .icon {
@@ -27,6 +32,6 @@
     }
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+        background-color: rgba(115, 92, 230, 0.25);
     }
 }

@@ -77,7 +77,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     ), []);
     const hasOptions = Array.isArray(options) && options.length > 0;
     return (
-        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })}>
+        <div {...hoverProps} onContextMenu={props.onContextMenu} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })}>
             <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
                 <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {

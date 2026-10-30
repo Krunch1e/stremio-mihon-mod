@@ -45,10 +45,10 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
         }
     }, [video, navigate, goBack]);
     const countLoadingAddons = React.useMemo(() => {
-        return props.streams.filter((stream) => stream.content.type === 'Loading').length;
+        return (Array.isArray(props.streams) ? props.streams : []).filter((stream) => stream.content.type === 'Loading').length;
     }, [props.streams]);
     const streamsByAddon = React.useMemo(() => {
-        return props.streams
+        return (Array.isArray(props.streams) ? props.streams : [])
             .filter((streams) => streams.content.type === 'Ready')
             .reduce((streamsByAddon, streams) => {
                 streamsByAddon[streams.addon.transportUrl] = {

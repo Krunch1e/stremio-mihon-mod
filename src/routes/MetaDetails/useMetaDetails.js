@@ -18,7 +18,7 @@ const map = (metaDetails) => ({
                             :
                             NaN
                     ),
-                    videos: metaDetails.metaItem.content.content.videos.map((video) => ({
+                    videos: (Array.isArray(metaDetails.metaItem.content.content.videos) ? metaDetails.metaItem.content.content.videos : []).map((video) => ({
                         ...video,
                         released: new Date(
                             typeof video.released === 'string' ?
@@ -56,7 +56,15 @@ const useMetaDetails = (urlParams) => {
                                 extra: []
                             }
                             :
-                            null,
+                            (urlParams.type === 'movie' && typeof urlParams.id === 'string' ?
+                                {
+                                    resource: 'stream',
+                                    type: 'movie',
+                                    id: urlParams.id,
+                                    extra: []
+                                }
+                                :
+                                null),
                         guessStream: true,
                     }
                 }

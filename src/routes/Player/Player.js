@@ -105,7 +105,7 @@ const Player = () => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
-    const metaItemContent = player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null;
+    const metaItemContent = player?.metaItem?.type === 'Ready' ? player.metaItem.content : null;
 
     const isEpg = (player.live ?? null) !== null;
     const currentEpgVideo = player.live?.currentProgram ?? null;

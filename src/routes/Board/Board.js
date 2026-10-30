@@ -6,6 +6,7 @@ const useTranslate = require('stremio/common/useTranslate');
 const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalogs');
 const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = require('stremio/common');
 const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
+const { useMihonCategories } = require('stremio/common/MihonCategories');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
@@ -22,35 +23,81 @@ const Board = () => {
     const [board, loadBoardRows] = useBoard();
     const notifications = useNotifications();
     const profile = useProfile();
+    const { getItemCategory, libraryCatalog } = useMihonCategories();
+
+    // Collect ALL items assigned to the "Watching" category persistently from library cache
+    const watchingCatalog = React.useMemo(() => {
+        const previewItems = Array.isArray(continueWatchingPreview.items) ? continueWatchingPreview.items : [];
+        const cachedLibrary = Array.isArray(libraryCatalog) ? libraryCatalog : [];
+
+        const seenIds = new Set();
+        const watchingItems = [];
+
+        // 1. Add active continue watching items in "Watching" first (with playback progress)
+        for (const item of previewItems) {
+            if (item && item._id && getItemCategory(item._id) === 'Watching') {
+                watchingItems.push(item);
+                seenIds.add(item._id);
+            }
+        }
+
+        // 2. Add all other library items assigned to "Watching" that haven't been started yet
+        for (const item of cachedLibrary) {
+            const id = item?._id || item?.id;
+            if (id && !seenIds.has(id) && getItemCategory(id) === 'Watching') {
+                const type = item.type || 'movie';
+                watchingItems.push({
+                    ...item,
+                    _id: id,
+                    id: id,
+                    deepLinks: item.deepLinks || {
+                        metaDetailsVideos: `#/detail/${type}/${id}`,
+                        metaDetailsStreams: type === 'movie' ? `#/detail/movie/${id}/${id}` : `#/detail/${type}/${id}`
+                    }
+                });
+                seenIds.add(id);
+            }
+        }
+
+        return {
+            ...continueWatchingPreview,
+            items: watchingItems
+        };
+    }, [continueWatchingPreview, libraryCatalog, getItemCategory]);
+
     const liveTvCatalog = React.useMemo(() => ({
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
+
     const boardCatalogsOffset =
-        (continueWatchingPreview.items.length > 0 ? 1 : 0) +
+        (watchingCatalog.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
+
     const showStreamingServerWarning = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);
+
     const { catalogRows, scrollContainerRef, onScroll } = useVisibleCatalogs({
         catalogs: board.catalogs,
         loadRange: loadBoardRows,
         leadingRows: boardCatalogsOffset,
         preloadRows: THRESHOLD,
     });
+
     return (
         <div className={styles['board-container']}>
             <EventModal />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
-                        continueWatchingPreview.items.length > 0 ?
+                        watchingCatalog.items.length > 0 ?
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
-                                title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={continueWatchingPreview}
+                                title="Currently Watching"
+                                catalog={watchingCatalog}
                                 itemComponent={ContinueWatchingItem}
                                 notifications={notifications}
                             />

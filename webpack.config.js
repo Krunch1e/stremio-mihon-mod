@@ -12,7 +12,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const packageJson = require('./package.json');
 
-const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
+const COMMIT_HASH = Date.now().toString(36);
 
 const THREAD_LOADER = {
     loader: 'thread-loader',
@@ -219,7 +219,7 @@ module.exports = (env, argv) => ({
         new webpack.EnvironmentPlugin({
             SENTRY_DSN: null,
             ...env,
-            SERVICE_WORKER_DISABLED: false,
+            SERVICE_WORKER_DISABLED: true,
             DEBUG: argv.mode !== 'production',
             VERSION: packageJson.version,
             COMMIT_HASH
@@ -227,12 +227,6 @@ module.exports = (env, argv) => ({
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
-        argv.mode === 'production' &&
-            new WorkboxPlugin.GenerateSW({
-                maximumFileSizeToCacheInBytes: 20000000,
-                clientsClaim: true,
-                skipWaiting: false
-            }),
         new CopyWebpackPlugin({
             patterns: [
                 { from: 'assets/favicons', to: 'favicons' },
