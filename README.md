@@ -8,7 +8,7 @@
 A custom, enhanced frontend mod for Stremio introducing custom category tabs, in-library real-time search, dynamic genre filtering, official IMDb ratings on poster cards, and a filtered "Currently Watching" Home screen shelf.
 
 [![License](https://img.shields.io/github/license/Stremio/stremio-web?color=7b5bf5)](/LICENSE.md)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web-blue)](#installation)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web-blue)](#installation--setup)
 [![Stremio](https://img.shields.io/badge/Stremio-v5%20Desktop-7b5bf5)](https://www.stremio.com)
 
 </div>
@@ -33,19 +33,20 @@ A custom, enhanced frontend mod for Stremio introducing custom category tabs, in
 
 ## Screenshots & Interface
 
-### 1. Library with Category Tabs & IMDb Rating Badges
-- Switch between custom tabs (*Watching*, *Plan to Watch*, *Completed*, *On Hold*, *Dropped*, *Uncategorized*) with live item count chips.
-- Direct 1-click reassignment by clicking any card's category tag or using the context menu.
-- Real-time search bar instantly filtering visible titles.
-- Gold IMDb rating badges with one-click **IMDb Top** rating sort.
+### 1. Library Overview (Tabs, Badges, Search & Filters)
+Switch between custom tabs (*Watching*, *Plan to Watch*, *Completed*, *On Hold*, *Dropped*, *Uncategorized*) with live item count chips, gold IMDb star rating badges, and real-time in-library search.
 
-### 2. Leveled Controls Toolbar
-- Type selector (*All*, *Movie*, *Series*).
-- Dynamic Genre dropdown auto-populated from your saved media metadata.
-- Integrated sort chips (*Last Watched*, *A-Z*, *Z-A*, *IMDb Top*).
+![Library Overview](docs/screenshots/library_overview.png)
 
-### 3. Filtered Home Shelf
-- Replaces the generic continue watching shelf with a dedicated **Currently Watching** row displaying only titles assigned to your *Watching* category.
+### 2. Custom Categories Manager
+Add, rename, delete, and reorder categories with live title counts to customize your personal library tracking workflow.
+
+![Category Manager](docs/screenshots/category_manager.png)
+
+### 3. Filtered "Currently Watching" Shelf
+Your Home screen shelf is filtered to strictly render titles currently assigned to your *Watching* category.
+
+![Currently Watching Shelf](docs/screenshots/home_shelf.png)
 
 ---
 
@@ -96,6 +97,8 @@ Because this uses Stremio's native shell integration, **hardware video decoding,
 
 ```
 stremio-mihon-mod/
+├── docs/
+│   └── screenshots/             # 1080p high-resolution showcase previews
 ├── src/
 │   ├── common/
 │   │   ├── MihonCategories.js   # Category management, localStorage persistence & events
