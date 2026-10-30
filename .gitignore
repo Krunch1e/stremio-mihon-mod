@@ -3,4 +3,7 @@
 /yarn.lock
 /npm-debug.log
 .DS_Store
-.prettierignore*.log
+.prettierignore
+*.log
+AGENTS.md
+agents.md

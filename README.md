@@ -2,93 +2,125 @@
 
 <img src="/assets/images/stremio_symbol.png" width="90" alt="Stremio logo">
 
-# Stremio Web
+# Stremio Mihon Mod
 
-**Freedom to Stream** — the official web UI of [Stremio](https://www.stremio.com), a modern media center that's a one-stop solution for your video entertainment.
+**Tachiyomi / Mihon style organization meets Stremio.**  
+A custom, enhanced frontend mod for Stremio introducing custom category tabs, in-library real-time search, dynamic genre filtering, official IMDb ratings on poster cards, and a filtered "Currently Watching" Home screen shelf.
 
-[![Build](https://github.com/Stremio/stremio-web/actions/workflows/build.yml/badge.svg)](https://github.com/Stremio/stremio-web/actions/workflows/build.yml)
-[![Github Page](https://img.shields.io/website?label=Page&logo=github&up_message=online&down_message=offline&url=https%3A%2F%2Fstremio.github.io%2Fstremio-web%2F)](https://stremio.github.io/stremio-web/development)
-[![Version](https://img.shields.io/github/package-json/v/Stremio/stremio-web/development?label=version&color=7b5bf5)](https://github.com/Stremio/stremio-web/releases)
 [![License](https://img.shields.io/github/license/Stremio/stremio-web?color=7b5bf5)](/LICENSE.md)
-
-**[🌐 Open the Web App](https://web.stremio.com)** · [Website](https://www.stremio.com) · [Report a bug](https://github.com/Stremio/stremio-web/issues/new/choose)
-
-<img alt="Stremio board" width="100%" src="https://github.com/user-attachments/assets/b3597fcc-ee53-4c4c-82be-457844135230" />
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web-blue)](#installation)
+[![Stremio](https://img.shields.io/badge/Stremio-v5%20Desktop-7b5bf5)](https://www.stremio.com)
 
 </div>
 
-## ✨ Features
+---
 
-- 🧩 **Addon-powered** — discover movies, series and channels from catalogs provided by [addons](https://web.stremio.com/#/addons)
-- 🔄 **Sync everywhere** — your library and Continue Watching follow your Stremio account across devices
-- 📺 **Casting** — play on the big screen via Chromecast
-- 💬 **Subtitles** — addon-provided or local, with customizable styling
-- ⌨️ **Keyboard-first player** — full playback control without touching the mouse
-- 🌍 **50+ languages** — community-translated via [stremio-translations](https://github.com/Stremio/stremio-translations)
-- 📱 **Installable** — runs as a standalone PWA
+## Highlights & Features
 
-## 📸 Screenshots
+| Feature | Vanilla Stremio | Stremio Mihon Mod |
+| :--- | :---: | :---: |
+| **Custom Category Tabs** | ❌ (Flat poster list) | ✅ **Tachiyomi / Mihon style tabs** (*Watching*, *Plan to Watch*, *Completed*, etc.) |
+| **Custom Categories Manager** | ❌ | ✅ **Add, rename, delete & reorder** your own custom categories |
+| **In-Library Real-Time Search** | ❌ (Searches global addons) | ✅ **Instant title search** strictly scoped to your library items |
+| **Dynamic Genre Filtering** | ❌ | ✅ **Auto-detects all genres** across your saved library items |
+| **Official IMDb Rating Badges** | ❌ | ✅ **Gold star rating badges** on poster cards with 1-click **IMDb Top** sort |
+| **Custom Category Badges** | ❌ | ✅ **Category tags** rendered directly on posters with 1-click reassignment |
+| **Filtered Home Shelf** | ❌ (Shows all recent) | ✅ **Exclusively displays** titles from your *Watching* category |
+| **Watched Auto-Categorization** | ❌ | ✅ Automatically categorizes watched items to *Completed* |
+| **Native Zero-Delay Launcher** | ❌ | ✅ Silent C# Windows launcher (`StremioMihon.exe`) with hardware MPV playback |
 
-| Discover | Meta Details |
-|:---:|:---:|
-| ![Discover](https://github.com/user-attachments/assets/e89af0e8-8c53-4dac-a38a-464b5dfcf1a4) | ![Meta Details](https://github.com/user-attachments/assets/858a6946-d34a-4490-90c2-368b8714d501) |
+---
 
-## 🛠 How it works
+## Screenshots & Interface
 
-The UI (this repo) is a React app, but the brains live in [stremio-core](https://github.com/Stremio/stremio-core) — Stremio's Rust engine compiled to WebAssembly and running in a Web Worker. The UI renders state, the core computes it. Playback goes through [stremio-video](https://github.com/Stremio/stremio-video), which picks the right player implementation for the environment.
+### 1. Library with Category Tabs & IMDb Rating Badges
+- Switch between custom tabs (*Watching*, *Plan to Watch*, *Completed*, *On Hold*, *Dropped*, *Uncategorized*) with live item count chips.
+- Direct 1-click reassignment by clicking any card's category tag or using the context menu.
+- Real-time search bar instantly filtering visible titles.
+- Gold IMDb rating badges with one-click **IMDb Top** rating sort.
 
-```mermaid
-flowchart LR
-    UI["React UI<br>(this repo)"] <--> Core["stremio-core<br>Rust → WASM, Web Worker"]
-    Core <--> API["Stremio API"]
-    Core <--> Addons["Addons"]
-    UI --> Video["stremio-video"]
-```
+### 2. Leveled Controls Toolbar
+- Type selector (*All*, *Movie*, *Series*).
+- Dynamic Genre dropdown auto-populated from your saved media metadata.
+- Integrated sort chips (*Last Watched*, *A-Z*, *Z-A*, *IMDb Top*).
 
-## 🚀 Getting started
+### 3. Filtered Home Shelf
+- Replaces the generic continue watching shelf with a dedicated **Currently Watching** row displaying only titles assigned to your *Watching* category.
 
-You'll need [Node.js](https://nodejs.org) 22+ and [pnpm](https://pnpm.io/installation) 11+.
+---
 
+## Installation & Setup
+
+### Prerequisites
+- [Stremio Desktop (v5+)](https://www.stremio.com) installed on Windows.
+- [Node.js (v18+)](https://nodejs.org) (for running the local WebUI server).
+
+### Quick Start
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Krunch1e/stremio-mihon-mod.git
+   cd stremio-mihon-mod
+   ```
+
+2. **Install dependencies and build:**
+   ```bash
+   npm install
+   npm run build
+   ```
+
+3. **Launch with Native Desktop Shell:**
+   - Double-click `launcher/StremioMihon.exe` (or run `launcher/Launch-Stremio-Mihon.bat`).
+   - The launcher silently starts the local streaming server (`11470`), starts the local WebUI server (`8080`), and connects the native Stremio desktop shell (`stremio-shell-ng.exe`) with hardware MPV acceleration.
+
+4. **Desktop Shortcut (Optional):**
+   - Run `powershell -ExecutionPolicy Bypass -File launcher/Create-Desktop-Shortcut.ps1` to create a desktop shortcut named **Stremio Mihon** that launches the mod directly.
+
+---
+
+## Architecture & How It Works
+
+Stremio's native desktop application is built with a decoupled architecture:
+1. **The Native Engine & Shell**: `stremio-shell-ng.exe` + `libmpv-2.dll` + local streaming server (`server.js` on port 11470).
+2. **The Frontend WebUI**: Webpack React application communicating with `stremio-core` WebAssembly in a Web Worker.
+
+`StremioMihon.exe` boots the native shell with:
 ```bash
-pnpm install
-pnpm start
+stremio-shell-ng.exe --webui-url="http://localhost:8080/?streamingServerUrl=http%3A%2F%2F127.0.0.1%3A11470%2F"
+```
+Because this uses Stremio's native shell integration, **hardware video decoding, GPU acceleration, audio passthrough, and torrent streaming function identically to official Stremio**.
+
+---
+
+## Directory Structure
+
+```
+stremio-mihon-mod/
+├── src/
+│   ├── common/
+│   │   ├── MihonCategories.js   # Category management, localStorage persistence & events
+│   │   ├── RatingsService.js    # Cinemeta metadata caching & IMDb rating parser
+│   │   └── CoreSuspender.js     # React 18 Suspense synchronization for Core models
+│   ├── components/
+│   │   ├── MihonCategoryBar/    # Category tab bar & category management modals
+│   │   ├── LibItem/             # Library poster item with category & rating badges
+│   │   └── MultiselectMenu/     # Leveled dropdown menus with portal support
+│   └── routes/
+│       ├── Board/               # Filtered Currently Watching home shelf
+│       ├── Library/             # Library view with Mihon tabs, genre filter & search
+│       └── Player/              # Asynchronous WebAssembly stream decoder
+├── launcher/
+│   ├── StremioMihon.cs          # Native C# launcher source code
+│   ├── StremioMihon.exe         # Compiled zero-delay native launcher binary
+│   └── Create-Desktop-Shortcut.ps1 # One-click Windows desktop shortcut installer
+├── http_server.js               # Lightweight local HTTP server with zero-cache headers
+└── package.json
 ```
 
-The dev server runs at `http://localhost:8080`.
+---
 
-| Command | Description |
-|---|---|
-| `pnpm start` | Development server with hot reload |
-| `pnpm run start-prod` | Development server in production mode |
-| `pnpm run build` | Production build |
-| `pnpm test` | Run tests |
-| `pnpm run lint` | Lint the source |
-| `pnpm run scan-translations` | Check for missing translation keys |
+## Credits & License
 
-### 🐳 Docker
-
-```bash
-docker build -t stremio-web .
-docker run -p 8080:8080 stremio-web
-```
-
-## 🤝 Contributing
-
-Bug reports and pull requests are welcome — [`good first issue`](https://github.com/Stremio/stremio-web/labels/good%20first%20issue) is a great place to start. Want Stremio in your language? Contribute to [stremio-translations](https://github.com/Stremio/stremio-translations). Please read the [Code of Conduct](/CODE_OF_CONDUCT.md) first.
-
-## 🧩 Ecosystem
-
-| Repository | What it is |
-|---|---|
-| [stremio-core](https://github.com/Stremio/stremio-core) | Rust engine: state, addon protocol, library, sync |
-| [stremio-video](https://github.com/Stremio/stremio-video) | Video player abstraction used by this UI |
-| [stremio-translations](https://github.com/Stremio/stremio-translations) | Community translations |
-| [stremio-addon-sdk](https://github.com/Stremio/stremio-addon-sdk) | Build your own addon in Node.js |
-
-## 💬 Community
-
-[Website](https://www.stremio.com) · [Blog](https://blog.stremio.com) · [Reddit](https://www.reddit.com/r/Stremio) · [X](https://x.com/stremio) · [Help center](https://stremio.zendesk.com/hc/en-us)
-
-## 📄 License
-
-Copyright © 2017-2026 Smart Code OOD. Released under the GPL-2.0 license — see [LICENSE](/LICENSE.md).
+- Based on the official [Stremio Web](https://github.com/Stremio/stremio-web) frontend by [Smart Code Ltd](https://www.stremio.com).
+- Category tabs concept inspired by [Mihon](https://github.com/mihonapp/mihon) / [Tachiyomi](https://github.com/tachiyomiorg/tachiyomi).
+- Licensed under the **GNU General Public License v3.0 (GPL-3.0)** - see [LICENSE.md](/LICENSE.md) for details.
